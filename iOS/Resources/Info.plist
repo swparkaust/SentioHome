@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key>
+	<string>Sentio</string>
+	<key>CFBundleDisplayName</key>
+	<string>Sentio</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>LSRequiresIPhoneOS</key>
+	<true/>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+	</array>
+	<key>UIRequiredDeviceCapabilities</key>
+	<array>
+		<string>armv7</string>
+	</array>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Sentio uses your location to detect when you're home and adjust your smart home accordingly.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Sentio uses your location to detect when you're home and adjust your smart home accordingly.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>Sentio monitors your activity and AirPods head position to make smarter home automation decisions — like dimming lights when you're falling asleep.</string>
+	<key>NSHomeKitUsageDescription</key>
+	<string>Sentio reads your HomeKit devices to show their status and help the Mac server control them.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Sentio uses speech recognition to listen for your replies when the AI speaks to you through AirPods.</string>
+	<key>NSFocusStatusUsageDescription</key>
+	<string>Sentio reads your Focus mode to avoid interruptions — like silencing voice announcements during Do Not Disturb.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Sentio uses the microphone to capture your voice when replying to spoken messages from the AI assistant.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>location</string>
+		<string>remote-notification</string>
+	</array>
+</dict>
+</plist>

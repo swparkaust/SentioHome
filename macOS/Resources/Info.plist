@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key>
+	<string>Sentio Home</string>
+	<key>CFBundleDisplayName</key>
+	<string>Sentio Home</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>$(MACOSX_DEPLOYMENT_TARGET)</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>UISupportedInterfaceOrientations</key>
+	<array>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+	</array>
+	<key>UILaunchScreen</key>
+	<dict/>
+	<key>NSSupportsAutomaticTermination</key>
+	<false/>
+	<key>NSSupportsSuddenTermination</key>
+	<false/>
+	<key>NSLocationUsageDescription</key>
+	<string>Sentio uses your Mac's location to check weather and sunrise/sunset times for smarter automation.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Sentio uses your Mac's location to check weather and sunrise/sunset times for smarter automation.</string>
+	<key>NSHomeKitUsageDescription</key>
+	<string>Sentio controls your HomeKit accessories to create the ideal environment based on your context.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Sentio plays ambient music through your speakers to match the mood of your environment.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Sentio reads your upcoming events to anticipate your needs — like quieting the house before a meeting.</string>
+	<key>NSAppleEventsUsageDescription</key>
+	<string>Sentio routes music to your speakers by controlling Apple Music's AirPlay output.</string>
+	<key>NSBluetoothAlwaysUsageDescription</key>
+	<string>Sentio scans for nearby Bluetooth devices to detect when guests are present and adjust your home accordingly.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Sentio uses audio input to initialize its speech engine for routing voice output to specific speakers.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Sentio discovers devices on your network to detect guest presence and control smart home accessories.</string>
+	<key>NSBonjourServices</key>
+	<array>
+		<string>_airplay._tcp</string>
+		<string>_raop._tcp</string>
+		<string>_companion-link._tcp</string>
+		<string>_homekit._tcp</string>
+		<string>_googlecast._tcp</string>
+		<string>_spotify-connect._tcp</string>
+	</array>
+</dict>
+</plist>

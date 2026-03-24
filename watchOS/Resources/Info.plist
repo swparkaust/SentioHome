@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key>
+	<string>Sentio</string>
+	<key>CFBundleDisplayName</key>
+	<string>Sentio</string>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>WKApplication</key>
+	<true/>
+	<key>WKCompanionAppBundleIdentifier</key>
+	<string>com.sentio.home.companion</string>
+	<key>NSHealthShareUsageDescription</key>
+	<string>Sentio reads your heart rate, sleep, and activity to make smarter home automation decisions — like dimming lights when you fall asleep.</string>
+	<key>NSHealthUpdateUsageDescription</key>
+	<string>Sentio does not write any health data.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Sentio uses your location to detect when you're home.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
+</dict>
+</plist>

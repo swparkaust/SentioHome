@@ -1,0 +1,353 @@
+name: SentioHome
+options:
+  bundleIdPrefix: com.sentio
+  deploymentTarget:
+    macOS: "26.0"
+    iOS: "26.0"
+    watchOS: "26.0"
+  xcodeVersion: "26"
+  minimumXcodeGenVersion: "2.40.0"
+
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    ENABLE_USER_SCRIPT_SANDBOXING: true
+
+targets:
+
+  # ─────────────────────────────────────────────
+  # SentioKit — testable framework (native macOS)
+  # Contains models and services with no HomeKit,
+  # MusicKit, or FoundationModels hard dependency.
+  # App targets compile these sources directly;
+  # test targets link the framework instead.
+  # ─────────────────────────────────────────────
+  SentioKit:
+    type: framework
+    platform: macOS
+    sources:
+      - path: Shared/Models
+        excludes:
+          - CompanionData+CloudKit.swift
+          - UserRequest+CloudKit.swift
+      - path: Shared/Services/AppClassifier.swift
+      - path: Shared/Services/ActionLog.swift
+      - path: Shared/Services/OverrideTracking.swift
+      - path: Shared/Services/PreferenceMemory.swift
+      - path: Shared/Services/PresenceLogic.swift
+      - path: Shared/Services/PromptBuilder.swift
+      - path: macOS/Services/OverrideTracker.swift
+      - path: macOS/Services/VoiceThrottler.swift
+      - path: macOS/Services/GuestDetectionService.swift
+      - path: macOS/Services/CalendarService.swift
+      - path: macOS/Services/NetworkDiscoveryService.swift
+      - path: macOS/Services/BLEScannerService.swift
+      - path: macOS/Services/ConversationManager.swift
+      - path: Shared/Services/EmergencyAlertTracker.swift
+      - path: Shared/Services/IntelligenceEngine.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.kit
+        MACOSX_DEPLOYMENT_TARGET: "26.0"
+        DEFINES_MODULE: true
+        GENERATE_INFOPLIST_FILE: true
+
+  # ─────────────────────────────────────────────
+  # StatusBarPlugin — AppKit bundle for NSStatusItem
+  # Loaded at runtime by the Catalyst app to provide
+  # a native menu bar extra. Catalyst can't use AppKit
+  # directly, so this plugin bridges the gap.
+  # ─────────────────────────────────────────────
+  StatusBarPlugin:
+    type: bundle
+    platform: macOS
+    sources:
+      - path: macOS/AppKitPlugin
+    dependencies:
+      - sdk: IOKit.framework
+      - sdk: CoreAudio.framework
+      - sdk: AudioToolbox.framework
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.statusbar-plugin
+        MACOSX_DEPLOYMENT_TARGET: "26.0"
+        GENERATE_INFOPLIST_FILE: true
+        WRAPPER_EXTENSION: bundle
+        DEVELOPMENT_TEAM: 7T66L636GR
+        CODE_SIGN_STYLE: Automatic
+
+  # ─────────────────────────────────────────────
+  # macOS Menu Bar App (Server) — Mac Catalyst
+  # Built as Mac Catalyst to access HomeKit while
+  # retaining macOS-native API access via CoreAudio/CG.
+  # ─────────────────────────────────────────────
+  SentioHome:
+    type: application
+    supportedDestinations: [macCatalyst]
+    sources:
+      - path: macOS
+        excludes:
+          - AppKitPlugin
+      - path: Shared
+    dependencies:
+      - target: StatusBarPlugin
+        embed: true
+        codeSign: false
+        copy:
+          destination: plugins
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home
+        INFOPLIST_FILE: macOS/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: macOS/Resources/SentioHome.entitlements
+        IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+        SUPPORTS_MACCATALYST: true
+        DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: false
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/../Frameworks"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        DEVELOPMENT_TEAM: 7T66L636GR
+        CODE_SIGN_STYLE: Automatic
+        ENABLE_USER_SCRIPT_SANDBOXING: false
+    entitlements:
+      path: macOS/Resources/SentioHome.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.security.network.client: true
+        com.apple.security.network.server: true
+        com.apple.security.assets.music.read-write: true
+        com.apple.security.personal-information.calendars: true
+        com.apple.security.personal-information.location: true
+        com.apple.security.device.bluetooth: true
+        com.apple.developer.homekit: true
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.sentio.home
+        com.apple.developer.icloud-services:
+          - CloudKit
+        com.apple.security.scripting-targets:
+          com.apple.Music:
+            - com.apple.music.playback
+        com.apple.security.device.audio-input: true
+
+  # ─────────────────────────────────────────────
+  # iOS Companion App
+  # ─────────────────────────────────────────────
+  SentioCompanion:
+    type: application
+    platform: iOS
+    sources:
+      - path: iOS
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.companion
+        INFOPLIST_FILE: iOS/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: iOS/Resources/SentioCompanion.entitlements
+        IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+        LD_RUNPATH_SEARCH_PATHS: "$(inherited) @executable_path/Frameworks"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    entitlements:
+      path: iOS/Resources/SentioCompanion.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.developer.homekit: true
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.sentio.home
+        com.apple.developer.icloud-services:
+          - CloudKit
+
+  # ─────────────────────────────────────────────
+  # watchOS Companion App
+  # ─────────────────────────────────────────────
+  SentioWatch:
+    type: application
+    platform: watchOS
+    sources:
+      - path: watchOS
+      - path: Shared
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.companion.watch
+        INFOPLIST_FILE: watchOS/Resources/Info.plist
+        CODE_SIGN_ENTITLEMENTS: watchOS/Resources/SentioWatch.entitlements
+        WATCHOS_DEPLOYMENT_TARGET: "26.0"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+    entitlements:
+      path: watchOS/Resources/SentioWatch.entitlements
+      properties:
+        com.apple.security.app-sandbox: true
+        com.apple.developer.healthkit: true
+        com.apple.developer.icloud-container-identifiers:
+          - iCloud.com.sentio.home
+        com.apple.developer.icloud-services:
+          - CloudKit
+
+  # ─────────────────────────────────────────────
+  # Shared Model & Service Tests
+  # ─────────────────────────────────────────────
+  SentioSharedTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/SharedTests
+    dependencies:
+      - target: SentioKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.shared-tests
+        MACOSX_DEPLOYMENT_TARGET: "26.0"
+        GENERATE_INFOPLIST_FILE: true
+
+  # ─────────────────────────────────────────────
+  # macOS Service Tests
+  # ─────────────────────────────────────────────
+  SentioMacOSTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/MacOSTests
+    dependencies:
+      - target: SentioKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.macos-tests
+        MACOSX_DEPLOYMENT_TARGET: "26.0"
+        GENERATE_INFOPLIST_FILE: true
+
+  # ─────────────────────────────────────────────
+  # Integration Tests
+  # ─────────────────────────────────────────────
+  SentioIntegrationTests:
+    type: bundle.unit-test
+    platform: macOS
+    sources:
+      - path: Tests/IntegrationTests
+    dependencies:
+      - target: SentioKit
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.integration-tests
+        MACOSX_DEPLOYMENT_TARGET: "26.0"
+        GENERATE_INFOPLIST_FILE: true
+
+  # ─────────────────────────────────────────────
+  # macOS UI Tests
+  # ─────────────────────────────────────────────
+  SentioHomeUITests:
+    type: bundle.ui-testing
+    supportedDestinations: [macCatalyst]
+    sources:
+      - path: Tests/MacOSUITests
+    dependencies:
+      - target: SentioHome
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.ui-tests
+        IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+        SUPPORTS_MACCATALYST: true
+        DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER: false
+        GENERATE_INFOPLIST_FILE: true
+        TEST_TARGET_NAME: SentioHome
+        DEVELOPMENT_TEAM: 7T66L636GR
+        CODE_SIGN_STYLE: Automatic
+
+  # ─────────────────────────────────────────────
+  # watchOS UI Tests
+  # ─────────────────────────────────────────────
+  SentioWatchUITests:
+    type: bundle.ui-testing
+    platform: watchOS
+    sources:
+      - path: Tests/WatchOSUITests
+    dependencies:
+      - target: SentioWatch
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.companion.watch-ui-tests
+        WATCHOS_DEPLOYMENT_TARGET: "26.0"
+        GENERATE_INFOPLIST_FILE: true
+        TEST_TARGET_NAME: SentioWatch
+        DEVELOPMENT_TEAM: 7T66L636GR
+        CODE_SIGN_STYLE: Automatic
+
+  # ─────────────────────────────────────────────
+  # iOS UI Tests
+  # ─────────────────────────────────────────────
+  SentioCompanionUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    sources:
+      - path: Tests/iOSUITests
+    dependencies:
+      - target: SentioCompanion
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.sentio.home.companion-ui-tests
+        IPHONEOS_DEPLOYMENT_TARGET: "26.0"
+        GENERATE_INFOPLIST_FILE: true
+        TEST_TARGET_NAME: SentioCompanion
+        DEVELOPMENT_TEAM: 7T66L636GR
+        CODE_SIGN_STYLE: Automatic
+
+schemes:
+  SentioAllTests:
+    build:
+      targets:
+        SentioKit: all
+        SentioSharedTests: [test]
+        SentioMacOSTests: [test]
+        SentioIntegrationTests: [test]
+    test:
+      targets:
+        - SentioSharedTests
+        - SentioMacOSTests
+        - SentioIntegrationTests
+
+  SentioHomeUITests:
+    build:
+      targets:
+        SentioHome: all
+        SentioHomeUITests: [test]
+    test:
+      targets:
+        - SentioHomeUITests
+
+  SentioCompanionUITests:
+    build:
+      targets:
+        SentioCompanion: all
+        SentioCompanionUITests: [test]
+    test:
+      targets:
+        - SentioCompanionUITests
+
+  SentioWatchUITests:
+    build:
+      targets:
+        SentioWatch: all
+        SentioWatchUITests: [test]
+    test:
+      targets:
+        - SentioWatchUITests
+
+  SentioCompanionRun:
+    build:
+      targets:
+        SentioCompanion: all
+    run:
+      executable: SentioCompanion
+
+  SentioWatchRun:
+    build:
+      targets:
+        SentioWatch: all
+    run:
+      executable: SentioWatch
+
+
+  SentioHomeRun:
+    build:
+      targets:
+        SentioHome: all
+        StatusBarPlugin: all
+    run:
+      config: Debug
